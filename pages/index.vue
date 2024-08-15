@@ -1,16 +1,6 @@
 <script setup>
 const toast = useToast();
 
-// onMounted(() => {
-//   toast.add({
-//     id: "update_downloaded",
-//     title: "Update downloaded.",
-//     description: "It will be installed on restart. Restart now?",
-//     icon: "i-octicon-desktop-download-24",
-//     timeout: 3000,
-//   });
-// });
-
 function onSubmit(event) {
   event.preventDefault();
 
@@ -28,25 +18,25 @@ function onSubmit(event) {
     .then((item) => {
       console.log(item);
 
-      toast.add({
-        id: "error",
-        title: item.message,
-        description: "It will be installed on restart. Restart now?",
-        icon: "i-heroicons-check-circle",
-        timeout: 2000,
-      });
-
-      
+      if (item?.success) {
+        toast.add({
+          title: item.message,
+          icon: "i-heroicons-check-circle",
+          timeout: 3000,
+        });
+      } else {
+        toast.add({
+          title: item.message,
+          icon: "ph:warning-circle",
+          timeout: 3000,
+          color: "red",
+        });
+      }
+      state.password = undefined;
+      state.phone = undefined;
     })
     .catch((error) => {
-      console.log("error");
-
-      toast.add({
-        title: error,
-        icon: "material-symbols:cancel-outline",
-        timeout: 3000,
-        color:"red"
-      });
+      console.log("error: ", error);
     });
 }
 
