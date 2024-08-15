@@ -1,7 +1,7 @@
 <script setup>
 import { useRouter } from "vue-router";
-const toast = useToast();
 const router = useRouter();
+const toast = useToast();
 
 const state = reactive({
   phone: undefined,
