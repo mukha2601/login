@@ -1,9 +1,14 @@
 <script setup>
+import { useRouter } from "vue-router";
 const toast = useToast();
+const router = useRouter();
 
-function onSubmit(event) {
-  event.preventDefault();
+const state = reactive({
+  phone: undefined,
+  password: undefined,
+});
 
+function onSubmit() {
   fetch("https://autoapi.dezinfeksiyatashkent.uz/api/auth/signin", {
     method: "POST",
     body: JSON.stringify({
@@ -19,6 +24,13 @@ function onSubmit(event) {
       console.log(item);
 
       if (item?.success) {
+        localStorage.setItem(
+          "accessToken",
+          item?.data?.tokens?.accessToken?.token
+        );
+
+        router.push("/home");
+
         toast.add({
           title: item.message,
           icon: "i-heroicons-check-circle",
@@ -39,16 +51,11 @@ function onSubmit(event) {
       console.log("error: ", error);
     });
 }
-
-const state = reactive({
-  phone: undefined,
-  password: undefined,
-});
 </script>
 
 <template>
   <div class="w-max p-8 border-2 border-primary">
-    <UForm :state="state" class="space-y-4" @submit="onSubmit">
+    <UForm :state="state" class="space-y-4" @submit.prevent="onSubmit()">
       <UFormGroup label="Phone" name="phone">
         <UInput v-model="state.phone" type="text" required minlength="3" />
       </UFormGroup>
